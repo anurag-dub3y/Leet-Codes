@@ -1,36 +1,29 @@
 class Solution {
 public:
-    string pushDominoes(string dominoes) {
-        int n = dominoes.size();
-        vector<int> left(n + 1, 0);
-        vector<int> right(n + 1, 0);
-        int r_pos = n + 1;
-        for (int i = 0; i < n; ++i) {
-            if (dominoes[i] == 'R') {
-                r_pos = i;
+    string pushDominoes(string dom) {
+        int n=dom.size();
+        vector<int> right(n,0), left(n,0);
+        for(int i=0; i<n; i++){
+            if(dom[i]=='R'){
+                right[i]=1;
             }
-            else if (dominoes[i] == 'L') {
-                r_pos = n + 1;
-            }
-            left[i] = r_pos == n + 1 ? n + 1 : i - r_pos;
+            else if(i>0 && dom[i]=='.' && right[i-1]!=0){ right[i]=1+right[i-1]; }
         }
-        int l_pos = -1;
-        for (int i = n - 1; i >= 0; --i) {
-            if (dominoes[i] == 'L') {
-                l_pos = i;
+        for(int i=n-1; i>=0; i--){
+            if(dom[i]=='L'){
+                left[i]=1;
             }
-            else if (dominoes[i] == 'R') {
-                l_pos = -1;
+            else if(i<n-1 && dom[i]=='.' && left[i+1]!=0){ left[i]=1+left[i+1]; }
+        }
+        string ans="";
+        for(int i=0; i<n; i++){
+            if(right[i]==left[i]){ ans+='.'; }
+            else if(right[i]==0 && left[i]){ ans+='L'; }
+            else if(left[i]==0 && right[i]){ ans+='R'; }
+            else{
+                ans+=(min(left[i],right[i])==left[i])?'L':'R';
             }
-            right[i] = l_pos == -1 ? n + 1 : l_pos - i;
         }
-        
-        string result = dominoes;
-        for (int i = 0; i < n; ++i) {
-            if (left[i] < right[i]) result[i] = 'R';
-            else if (left[i] > right[i]) result[i] = 'L';
-        }
-
-        return result;
-    } 
+        return ans;
+    }
 };
