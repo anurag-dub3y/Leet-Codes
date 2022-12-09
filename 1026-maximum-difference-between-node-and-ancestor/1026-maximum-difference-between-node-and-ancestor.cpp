@@ -11,24 +11,10 @@
  */
 class Solution {
 public:
-    int ans=0;
-    int minVal(TreeNode* root){
-        if(!root){ return 100005; }
-        return min({root->val,minVal(root->left),minVal(root->right)});
-    }
-    int maxVal(TreeNode* root){
-        if(!root){ return -1; }
-        return max({root->val,maxVal(root->left),maxVal(root->right)});
-    }
-    void dfs(TreeNode *root){
-        if(!root){ return; }
-        int mn=minVal(root), mx=maxVal(root);
-        int val=max(abs(root->val-mn),abs(root->val-mx));
-        ans=max(ans,val);
-        dfs(root->left); dfs(root->right);
-    }
-    int maxAncestorDiff(TreeNode* root) {
-        dfs(root);
-        return ans;
+    int maxAncestorDiff(TreeNode* r, int mn = 100000, int mx = 0) {
+        if (r == nullptr){ return mx - mn; }
+        mx = max(mx, r->val);
+        mn = min(mn, r->val);
+        return max(maxAncestorDiff(r->left, mn, mx), maxAncestorDiff(r->right, mn, mx));
     }
 };
