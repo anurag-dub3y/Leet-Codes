@@ -1,3 +1,4 @@
+// https://leetcode.com/problems/number-of-good-paths/discuss/2620584/Detailed-Solution-oror-Disjoint-Set-Union-oror-C%2B%2B
 class Solution {
 public:
     int find(vector<int>& parent,int a){
