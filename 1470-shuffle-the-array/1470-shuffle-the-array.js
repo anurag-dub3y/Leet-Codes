@@ -1,8 +1,13 @@
-class Solution:
-    def shuffle(self, nums: List[int], n: int) -> List[int]:
-        ans = []
-        for i in range (0,n):
-            ans.append(nums[i])
-            ans.append(nums[i+n])
-        return ans;
-        
+/**
+ * @param {number[]} nums
+ * @param {number} n
+ * @return {number[]}
+ */
+var shuffle = function(nums, n) {
+    let result = [];
+    for(let i = 0; i < n; i++){
+        result.push(nums[i]);
+        result.push(nums[i+n]);   
+    }
+    return result;
+};
