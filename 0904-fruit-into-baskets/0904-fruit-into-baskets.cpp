@@ -1,7 +1,7 @@
 class Solution {
 public:
     int totalFruit(vector<int>& f) {
-        map<int,int> m;
+        unordered_map<int,int> m;
         queue<int> q;
         int ans=0, cnt=0, i=0, n=f.size();
         for(int i=0; i<n; i++){
