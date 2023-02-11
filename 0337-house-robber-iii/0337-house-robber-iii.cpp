@@ -12,7 +12,7 @@
 class Solution {
 public:
     int ans=0;
-    map<TreeNode*,int> mp;
+    unordered_map<TreeNode*,int> mp;
     int find(TreeNode *root){
         if(!root){ return 0; }
         if(mp.find(root)!=mp.end()){ return mp[root]; }
