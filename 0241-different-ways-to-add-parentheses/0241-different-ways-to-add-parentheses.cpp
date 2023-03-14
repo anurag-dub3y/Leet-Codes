@@ -1,11 +1,13 @@
 class Solution {
 public:
+    unordered_map<string,vector<int>> mp;
     int intS(string &ex){
         int ans=0;
         for(auto i:ex){ ans*=10; ans+=(i-'0'); }
         return ans;
     }
     vector<int> diffWaysToCompute(string ex) {
+        if(mp.find(ex)!=mp.end()){ return mp[ex]; }
         vector<int> ans;
         for(int i=0; i<ex.length(); i++){
             char c=ex[i];
@@ -25,6 +27,6 @@ public:
             int num=intS(ex);
             ans.push_back(num);
         }
-        return ans;
+        return mp[ex]=ans;
     }
 };
