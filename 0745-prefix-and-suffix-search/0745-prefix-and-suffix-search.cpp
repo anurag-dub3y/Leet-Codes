@@ -1,9 +1,11 @@
 class node{
     public:
-        node *next[27];
+        unordered_map<int,node*> next;
+        // node *next[27];
         int last;
         node(){
-            memset(next,0,sizeof(next));
+            // memset(next,0,sizeof(next));
+            next.clear();
             last=-1;
         }
 };
@@ -13,7 +15,7 @@ class trie{
     void insert(string &word, int i){
         node *temp=root;
         for(auto c:word){
-            if(!temp->next[c-'a']){
+            if(temp->next.count(c-'a')==0){
                 temp->next[c-'a']=new node();
             }
             temp=temp->next[c-'a'];
@@ -23,7 +25,7 @@ class trie{
     bool search(string &word, int &i){
         node* temp=root;
         for(auto c:word){
-            if(!temp->next[c-'a']){ i=-1; return false; }
+            if(temp->next.count(c-'a')==0){ i=-1; return false; }
             temp=temp->next[c-'a'];
             // i=max(i,temp->last);
             i=temp->last;
