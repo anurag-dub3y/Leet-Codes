@@ -1,22 +1,29 @@
-struct node{
-    node* next[26]={};
-    int cnt=0;
+class node{
+    public:
+        node *next[26];
+        int cnt=0;
+        node(){
+            memset(next,0,sizeof(next));
+            cnt=1;
+        }
 };
 class Solution {
-    node root;
 public:
+    node *root=new node();
     void insert(string &word){
-        auto r=&root;
+        node *r=root;
         for(auto c:word){
             if(!r->next[c-'a']){
                 r->next[c-'a']=new node();
             }
-            (r->next[c-'a']->cnt)+=1;
+            else{
+                (r->next[c-'a']->cnt)+=1;
+            }
             r=r->next[c-'a'];
         }
     }
     int search(string &word){
-        auto r=&root;
+        node *r=root;
         int ans=0;
         for(auto c:word){
             ans+=(r->next[c-'a']->cnt);
