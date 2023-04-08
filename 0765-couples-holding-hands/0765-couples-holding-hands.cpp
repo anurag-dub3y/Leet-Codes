@@ -3,7 +3,7 @@ public:
     vector<int> p;
     int findPar(int n){
         if(p[n]==n){ return n; }
-        return findPar(p[n]);
+        return n=findPar(p[n]);
     }
     void join(int a, int b){
         a=findPar(a), b=findPar(b);
