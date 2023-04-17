@@ -1,11 +1,6 @@
-class Solution {
-public:
-    vector<bool> kidsWithCandies(vector<int>& candies, int extraCandies) {
-        int mx=*max_element(begin(candies),end(candies));
-        vector<bool> ans(candies.size());
-        for(int i=0; i<candies.size(); i++){
-            ans[i]=candies[i]+extraCandies>=mx;
-        }
-        return ans;
-    }
-};
+class Solution:
+    def kidsWithCandies(self, candies: List[int], extraCandies: int) -> List[bool]:
+        max_candies = max(candies)
+        for i in range(len(candies)):
+            candies[i] = (candies[i] + extraCandies >= max_candies)
+        return candies
