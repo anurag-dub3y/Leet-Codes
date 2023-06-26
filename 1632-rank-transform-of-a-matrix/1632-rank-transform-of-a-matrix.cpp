@@ -1,107 +1,96 @@
-// class Solution {
-// public:
-// //     using pii=pair<int,int>
-// //     void make_set(pii v) {
-// //         parent[v] = v;
-// //     }
-    
-// //     int find_set(int v) {
-// //         if (v == parent[v])
-// //             return v;
-// //         return find_set(parent[v]);
-// //     }
-    
-// //     void union_sets(int a, int b) {
-// //         a = find_set(a);
-// //         b = find_set(b);
-// //         if (a != b)
-// //             parent[b] = a;
-// //     }
-//     using vii=vector<int>;
-//     vector<vector<int>> matrixRankTransform(vector<vector<int>>& mat) {
-//         vector<vii> vp;
-//         int m=mat.size(), n=mat[0].size();
-//         for(int i=0; i<m; i++){
-//             for(int j=0; j<n; j++){
-//                 vp.push_back({mat[i][j],i,j});
-//             }
-//         }
-//         sort(begin(vp),end(vp));
-//         vector<vector<int>> ans(m,vector<int>(n,0));
-//         vii rows(m,0), cols(n,0);
-//         vector<vii> rMx(m), cMx(n);
-//         for(int i=0; i<m; i++){
-//             rMx[i]={-1,INT_MIN};
-//         }
-//         for(int j=0; j<n; j++){
-//             cMx[j]={-1,INT_MIN};
-//         }
-//         for(int k=0; k<vp.size(); k++){
-//             int v=vp[k][0], i=vp[k][1], j=vp[k][2];
-//             if(v==rMx[i][1] or v==cMx[j][1]){
-//                 ans[i][j]=max(ans[i][rMx[i][0]],ans[cMx[j][0]][j]);
-//             }
-//             if(v==rMx[i][1]){
-//                 ans[i][j]=ans[i][rMx[i][0]];
-//             }
-//             if(v==cMx[j][1]){
-//                 ans[i][j]=max(ans[i][j],ans[cMx[j][0]][j]); 
-//             }
-//             if(v!=rMx[i][1] and v!=cMx[j][1]){
-//                 ans[i][j]=1+max(rows[i],cols[j]);
-//             }
-//             if(v>rMx[i][1]){ rMx[i]={j,v}; }
-//             if(v>cMx[j][1]){ cMx[j]={i,v}; }
-//             rows[i]=max(rows[i],ans[i][j]);
-//             cols[j]=max(cols[j],ans[i][j]);
-//         }
-//         // cout<<'\n';
-//         return ans;
-//     }
-// };
-class DSU {
-    public:
-         DSU(int n): p_(n, -1) {}
-         int find(int x) {
-           return p_[x] == -1 ? x : p_[x] = find(p_[x]);
-         }  
-         void merge(int x, int y) {
-           x = find(x), y = find(y);
-           if (x != y) p_[x] = y;    
-         }
-    private:
-      vector<int> p_;
-};
- 
 class Solution {
 public:
-    vector<vector<int>> matrixRankTransform(vector<vector<int>>& matrix) {
-        const int m = matrix.size();
-        const int n = matrix[0].size();
-        vector<vector<int>> ans(m, vector<int>(n));
-        map<int, vector<pair<int, int>>> mp; // val -> {positions}
-        for (int y = 0; y < m; ++y){
-            for (int x = 0; x < n; ++x){
-                mp[matrix[y][x]].emplace_back(x, y);
+    using pii=pair<int,int>;
+    pii par[501][501];
+    int rank[501][501];
+    pii find(pii a){
+        if(par[a.first][a.second]==a){ return a; }
+        return par[a.first][a.second]=find(par[a.first][a.second]);
+    }
+    void join(pii a, pii b){
+        a=find(a), b=find(b);
+        if(rank[a.first][a.second]>rank[b.first][b.second]){
+            par[a.first][a.second]=b;
+            rank[a.first][a.second]++;
+        }
+        else{ par[b.first][b.second]=a; rank[b.first][b.second]++; }
+    }
+    vector<vector<int>> matrixRankTransform(vector<vector<int>>& mat) {
+        int m=mat.size(), n=mat[0].size();
+        vector<vector<int>> ans(m,vector<int>(n,0));
+        
+        // Initialise the DSU
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                par[i][j]={i,j}; rank[i][j]=1;
             }
         }
-        vector<int> rx(n), ry(m);
-        for (const auto& [val, ps]: mp) {
-          DSU dsu(n + m);
-          vector<vector<pair<int, int>>> cc(n + m); // val -> {positions}
-          
-            // By merging xth row and yth column ranks, now their rank will be the max of the ranks observed while
-            // merging them
-            for (const auto& [x, y]: ps) dsu.merge(x, y + n);
-            for (const auto& [x, y]: ps) cc[dsu.find(x)].emplace_back(x, y);      
-            for (const auto& ps: cc) {
-                int rank = 1;
-                for (const auto& [x, y]: ps)
-                    rank = max(rank, max(rx[x], ry[y]) + 1);
-                for (const auto& [x, y]: ps)
-                    rx[x] = ry[y] = ans[y][x] = rank;   
-            }      
+        
+        // For every row, group together the same values
+        for(int i=0; i<m; i++){
+            map<int,pii> mp;
+            for(int j=0; j<n; j++){
+                if(mp.find(mat[i][j])!=mp.end()){ join({i,j},mp[mat[i][j]]); }
+                else{ mp[mat[i][j]]={i,j}; }
+            }
+        }
+        
+        // For every column, group together the same values
+        for(int j=0; j<n; j++){
+            map<int,pii> mp;
+            for(int i=0; i<m; i++){
+                if(mp.find(mat[i][j])!=mp.end()){ join({i,j},mp[mat[i][j]]); }
+                else{ mp[mat[i][j]]={i,j}; }
+            }
+        }
+        
+        // At this point, some sets have been formed with these properties:
+        // 1. Each set element has the same mat[i][j]
+        // 2. They all have the same parent
+        
+        // Now we will group all the childrens, ie these set elements to their parent
+        vector<pii> isHead[m][n];
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                pii h=find({i,j});
+                isHead[h.first][h.second].push_back({i,j});
+            }
+        }
+        
+        // Now we will store all these sets together in a sorted form
+        map<int,vector<vector<pii>>> bigSet;
+        for(int i=0; i<m; i++){
+            for(int j=0; j<n; j++){
+                if(isHead[i][j].empty()){ continue; }
+                else{
+                    bigSet[mat[i][j]].push_back(isHead[i][j]);
+                    // m[val] is a vector which contains all the sets with value val
+                    // Each of these different set has some children joined together
+                }
+            }
+        }
+        
+        vector<int> rowRank(m,0), colRank(n,0);
+        for(auto it:bigSet){
+            auto sets=it.second;
+            for(auto s:sets){
+                int maxRankOfThisSet=0;
+                for(auto cell:s){
+                    int i=cell.first, j=cell.second;
+                    maxRankOfThisSet=max(maxRankOfThisSet,1+max(rowRank[i],colRank[j]));
+                }
+                // Update these values
+                for(auto cell:s){
+                    int i=cell.first, j=cell.second;
+                    ans[i][j]=maxRankOfThisSet;
+                    rowRank[i]=max(rowRank[i],maxRankOfThisSet);
+                    colRank[j]=max(colRank[j],maxRankOfThisSet);
+                }
+            }
         }
         return ans;
-  }
+    }
 };
+
+
+
