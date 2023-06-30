@@ -3,7 +3,7 @@ public:
     int dp[(1<<9)+1];
     int dir[5]={-1,0,1,0,-1};
     int m, n;
-    set<int> visited;   // We visited this before
+    // set<int> visited;   // We visited this before
     bool valid(int i, int j){
         return i>=0 and i<m and j>=0 and j<n;
     }
@@ -29,19 +29,20 @@ public:
         // print(mask);
         if(mask==0){ return 0; }
         if(dp[mask]!=-1){ return dp[mask]; }
-        if(visited.count(mask)){ return 1e9; }
+        // if(visited.count(mask)){ return 1e9; }
         int ans=1e9;
-        visited.insert(mask);
+        // visited.insert(mask);
+        dp[mask]=1e9;
         for(int i=0; i<m; i++){
             for(int j=0; j<n; j++){
                 flipCurrent(i,j,mask);
-                if(find(mask)!=1e9 and !visited.count(mask)){
+                if(find(mask)!=1e9){
                     ans=min(ans,1+find(mask));
                 }
                 flipCurrent(i,j,mask);
             }
         }       
-        visited.erase(mask);
+        // visited.erase(mask);
         return dp[mask]=ans;
     }
     int minFlips(vector<vector<int>>& mat) {
