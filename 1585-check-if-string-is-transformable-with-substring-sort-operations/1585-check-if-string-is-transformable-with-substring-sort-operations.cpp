@@ -42,7 +42,7 @@ public:
 //     }
     bool isTransformable(string &s, string &t) {
         int n=s.length();
-        map<int,deque<int>> mp;
+        unordered_map<int,deque<int>> mp;
         for(int i=0; i<n; i++){
             mp[s[i]-'0'].push_back(i);
         }
