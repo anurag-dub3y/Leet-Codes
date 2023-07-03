@@ -40,7 +40,7 @@ public:
         
 //         return dp[temp]=check1(s,t) or check2(s,t);
 //     }
-    bool isTransformable(string s, string t) {
+    bool isTransformable(string &s, string &t) {
         int n=s.length();
         map<int,deque<int>> mp;
         for(int i=0; i<n; i++){
