@@ -11,18 +11,18 @@ public:
     }
     
     string solve(string& s, vector<ull>& power) {
-        int low = 1, high = s.size();
+        int low = 1, high = s.size(), start=0, len=0;
         while(low <= high) {
             int mid = low + (high - low)/2;
             if (check(s, mid, power) != -1) {
                 low = mid + 1;
+                len=mid; start=check(s, mid, power);
             } else {
                 high = mid - 1;
             }
         }
-        int start = check(s, low-1, power);
-        if (start > 0) return s.substr(start, low-1);
-        return "";
+        // int start = check(s, low-1, power);
+        return s.substr(start,len);
     }
     
     int check(string&s, int len, vector<ull>& power) {
