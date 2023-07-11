@@ -11,7 +11,9 @@
  */
 class Solution {
 public:
-    map<int,vector<int>> graph;
+    vector<int> graph[100005];
+    int vis[100005];
+    // map<int,vector<int>> graph;
     void init(TreeNode* root, int prev=-1){
         if(!root){ return; }
         if(prev!=-1){ 
@@ -39,7 +41,7 @@ public:
             while(sz--){
                 int x=q.front(); q.pop();
                 for(auto j:graph[x]){
-                    if(!vis.count(j)){
+                    if(!vis[j]){
                         q.push(j); vis[j]=1;
                     }
                 }
