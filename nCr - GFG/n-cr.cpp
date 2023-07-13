@@ -21,12 +21,16 @@ int mod=1e9+7;
         return res;
     }
     int modInverse(int a, int mod) { return binpowmod(a, mod-2, mod); }
+    int dp[1001];
+    long long find(int n, int r){
+        if(r==0){ return 1; }
+        if(dp[r]!=-1){ return dp[r]; }
+        long long prod=find(n,r-1);
+        return dp[r]=(prod%mod * (n - r + 1)%mod *modInverse(r,mod))%mod;
+    }
     int nCr(int n, int r){
-        long long prod = 1LL;
-        for(int i = 1; i <= r; i++){
-            prod = (prod%mod * (n - r + i)%mod *modInverse(i,mod))%mod;
-        }
-        return prod;
+        memset(dp,-1,sizeof(dp));
+        return find(n,r);
     }
 };
 
