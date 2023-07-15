@@ -1,2 +1,1 @@
-select event_day as 'day', emp_id as 'emp_id', sum(out_time) - sum(in_time) as 'total_time' from Employees
-group by event_day, emp_id
+select Employees.event_day as 'day', Employees.emp_id as 'emp_id', sum(out_time) - sum(in_time) as 'total_time' from Employees group by Employees.event_day, Employees.emp_id
