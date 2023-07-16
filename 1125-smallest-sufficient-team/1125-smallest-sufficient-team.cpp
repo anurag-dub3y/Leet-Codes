@@ -1,54 +1,29 @@
 class Solution {
 public:
-    vector<int> smallestSufficientTeam(vector<string>& req_skills, vector<vector<string>>& people) {
+    vector<int> smallestSufficientTeam(vector<string>& reqd_skills, vector<vector<string>>& people) {
         
         // Hashing all the strings and giving them bits as values
-//         int bit=0, reqd_mask=(1<<reqd_skills.size())-1;
-//         map<string,int> mp;
-//         for(auto r:reqd_skills){ mp[r]=bit++; }
+        int bit=0, reqd_mask=(1<<reqd_skills.size())-1;
+        map<string,int> mp;
+        for(auto r:reqd_skills){ mp[r]=bit++; }
         
-//         unordered_map<int,vector<int>> dp;
-//         dp.reserve(1 << reqd_skills.size());
-//         int p_size=people.size();
-//         for(int i=0; i<p_size; i++){
-//             int curr_mask=0;
-//             for(auto r:people[i]){ curr_mask|=(1<<mp[r]); }
-//             for(auto it = dp.begin(); it!=dp.end(); it++){
-//                 int comb = it->first | curr_mask;
-//                 cout<<comb<<' ';
-//                 if(dp.find(comb)==dp.end() || dp[comb].size()>1+dp[it->first].size()) {
-//                     dp[comb]=it->second;
-//                     dp[comb].push_back(i);
-//                 }  
-//             }
-//         }
-//         return dp[reqd_mask];
-            int n = req_skills.size();
-            unordered_map<int,vector<int>> res;  // using unordered_map, we improve on time
-            res.reserve(1 << n);    // using reserved space, we avoid rehash
-            //map<int,vector<int>> res;
-            res[0]={};
-            unordered_map<string,int> skill_map;
-            for(int i=0;i< req_skills.size();i++)
-                skill_map[req_skills[i]]=i;
-            
-            for(int i=0;i<people.size();i++)
-            {
-                int curr_skill = 0;
-                for(int j=0;j<people[i].size();j++)
-                    curr_skill |= 1<<skill_map[people[i][j]];
-                
-                for(auto it = res.begin();it!=res.end();it++)
-                {
-                    int comb = it->first | curr_skill;
-                    if(res.find(comb)==res.end() || res[comb].size()>1+res[it->first].size())
-                    {
-                        res[comb]=it->second;
-                        res[comb].push_back(i);
-                    }       
-                }
+        unordered_map<int,vector<int>> dp;
+        dp[0]={};
+        dp.reserve(1 << reqd_skills.size());
+        int p_size=people.size();
+        for(int i=0; i<p_size; i++){
+            int curr_mask=0;
+            for(auto r:people[i]){ curr_mask|=(1<<mp[r]); }
+            for(auto it = dp.begin(); it!=dp.end(); it++){
+                int comb = it->first | curr_mask;
+                // cout<<comb<<' ';
+                if(dp.find(comb)==dp.end() || dp[comb].size()>1+dp[it->first].size()) {
+                    dp[comb]=it->second;
+                    dp[comb].push_back(i);
+                }  
             }
-            return res[(1<<n) -1];
+        }
+        return dp[reqd_mask];
         
         // Approach II
         // vector<pair<int,int>,int> vp;
