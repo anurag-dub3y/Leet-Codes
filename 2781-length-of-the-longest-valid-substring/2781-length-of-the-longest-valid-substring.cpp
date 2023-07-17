@@ -1,8 +1,8 @@
-vector<string> last={"bc","de","b"};
+// vector<string> last={"bc","de","b"};
 class Solution {
 public:
     int longestValidSubstring(string &word, vector<string>& forbidden) {
-        if(forbidden==last){ return word.length(); }
+        // if(forbidden==last){ return word.length(); }
         set<string> forb;
         for(auto i:forbidden){ forb.insert(i); }
         string s="";
