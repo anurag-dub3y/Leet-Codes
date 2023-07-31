@@ -1,35 +1,43 @@
+typedef long long ll;
 class Solution {
 public:
-    int dp[1001], mxVal=0;
-    long long find(map<int,int> &tires, int changeTime, int numLaps){
-        if(numLaps==0){ return 0; }
-        if(dp[numLaps]!=-1){ return dp[numLaps]; }
-        long long ans=LLONG_MAX;
-        for(auto &[t0,t1]:tires){
-            long long curr=0;
-            for(int i=numLaps; i>0; i--){
-                long long largeVal=1LL*t0*pow(t1,numLaps-i);
-                if(largeVal>changeTime+mxVal){ break; }
-                curr+=1LL*t0*pow(t1,numLaps-i);
-                if(i==1){
-                    ans=min(ans,1LL*curr+find(tires,changeTime,0));
-                }
-                else{
-                    ans=min(ans,1LL*changeTime+curr+find(tires,changeTime,i-1));
-                }
+    int minimumFinishTime(vector<vector<int>>& tires, int changeTime, int n) {
+        
+        const int inf = 0x3f3f3f3f;
+        vector<ll> mn(100, inf);
+        ll m = 0;
+        
+        for (auto &v : tires) {
+            ll f = v[0], r = v[1];
+            
+            ll i = 1, c = f , j = f;
+            while (1) {
+                mn[i] = min(mn[i], c + changeTime);
+                m = max(m, i);
+                if (j + changeTime <= j * r ) break;
+                i++; 
+                j *= r;
+                c += j;
             }
         }
-        return dp[numLaps]=ans;
-    }
-    int minimumFinishTime(vector<vector<int>>& tires, int changeTime, int numLaps) {
-        memset(dp,-1,sizeof(dp));
-        map<int,int> realTires;
-        for(auto &t:tires){
-            if(realTires.count(t[0])==0){ realTires[t[0]]=t[1]; }
-            else{ realTires[t[0]]=min(realTires[t[0]],t[1]); }
-            mxVal=max(mxVal,t[0]);
+        
+        //for (int i = 1; i <= m; i++) {
+        //    cout << i << ' ' << mn[i] << endl;
+        //}
+        
+        ll dp[n + 1];
+        memset(dp, 0x3f, sizeof dp);
+        dp[0] = 0;
+        
+        
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= i && j <= m; j++) {
+                dp[i] = min(dp[i], dp[i - j] + mn[j]);
+            }
         }
-        // for(auto &[t0,t1]:realTires){ cout<<t0<<' '<<t1<<endl; }
-        return (int)find(realTires,changeTime,numLaps);
+        
+        return dp[n] - changeTime;
+        
+        
     }
 };
