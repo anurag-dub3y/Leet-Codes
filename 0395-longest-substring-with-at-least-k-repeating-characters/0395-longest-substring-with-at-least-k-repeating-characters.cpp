@@ -1,19 +1,28 @@
 class Solution {
 public:
-    map<string,int> dp;
-    int longestSubstring(string &s, int k) {
-        int n = (int)s.length();
-        if(dp.count(s)){ return dp[s]; }
-        unordered_map<char, int> count;
-        for(auto &c : s){ ++count[c]; }
-        int mid = 0;
-        while(mid < n && count[s[mid]] >= k){ mid++; }
-        if(mid==n){ return n; }
-        string leftTmp=s.substr(0,mid); 
-        int left = longestSubstring(leftTmp, k);
-        while(mid < n && count[s[mid]] < k){ ++mid; }
-        string rightTmp=s.substr(mid);
-        int right = longestSubstring(rightTmp, k);
-        return max(left, right);
+    int longestSubstring(string s, int k) {
+        unordered_set<char> st(begin(s),end(s));
+        int total=st.size();
+        int ans=0;
+        for(int curr=1; curr<=total; curr++){
+            int st=0, end=0, tmp[26]={0}, uniq=0, good=0;
+            while(end<s.length()){
+                // cout<<st<<' '<<end<<' '<<uniq<<' '<<good<<endl;
+                if(uniq<=curr){
+                    if(tmp[s[end]-'a']==0){ uniq++; }
+                    tmp[s[end]-'a']++;
+                    if(tmp[s[end]-'a']==k){ good++; }
+                    end++;
+                }
+                else{
+                    if(tmp[s[st]-'a']==k){ good--; }
+                    tmp[s[st]-'a']--;
+                    if(tmp[s[st]-'a']==0){ uniq--; }
+                    st++;
+                }
+                if(uniq==curr and good==uniq){ ans=max(ans,end-st); }
+            }
+        }
+        return ans;
     }
 };
