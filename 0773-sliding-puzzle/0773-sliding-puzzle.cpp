@@ -6,15 +6,15 @@ public:
         return 5;
     }
     int slidingPuzzle(vector<vector<int>>& b) {
-        map<string,int> dp;
         string mask=to_string(b[1][2])+to_string(b[1][1])+to_string(b[1][0])
             +to_string(b[0][2])+to_string(b[0][1])+to_string(b[0][0]);
         priority_queue<pair<int,string>,vector<pair<int,string>>,greater<pair<int,string>>> pq;
+        unordered_map<string,int> dp;
+        dp[mask]=0;
         pq.push({0,mask});
         while(!pq.empty()){
             auto [moves,s]=pq.top(); pq.pop();
-            // cout<<s<<' '<<moves<<endl;
-            if(s==tmp){ return moves; }
+            if(s==tmp){ return dp[s]=moves; }
             int pos=findPos(s);
             if(pos==0){
                 swap(s[0],s[3]); 
