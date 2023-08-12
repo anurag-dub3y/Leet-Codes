@@ -2,7 +2,7 @@ class Solution {
 public:
     int findCenter(vector<vector<int>>& edges) {
         int n=edges.size()+1;
-        unordered_map<int,int> mp;
+        vector<int> mp(n+1,0);
         for(auto &e:edges){
             mp[e[0]]++;
             mp[e[1]]++;
