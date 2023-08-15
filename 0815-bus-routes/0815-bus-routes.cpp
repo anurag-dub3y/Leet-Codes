@@ -16,10 +16,10 @@ public:
         }
         int ans=INT_MAX;
         while(!pq.empty()){
-            int d=pq.front().first, i=pq.front().second; pq.pop();
+            auto [d,i]=pq.front(); pq.pop();
             if(haveDest[i]==1){ return ans=min(ans,d); }
-            for(int &b:r[i]){  // For all the buses that visit this station
-                for(int &j:conns[b]){  // For all the stations this bus visits
+            for(auto &b:r[i]){  // For all the buses that visit this station
+                for(auto &j:conns[b]){  // For all the stations this bus visits
                     if(dist.count(j)==0 or dist[j]>1+d){
                         pq.push({1+d,j});
                         dist[j]=1+d;
