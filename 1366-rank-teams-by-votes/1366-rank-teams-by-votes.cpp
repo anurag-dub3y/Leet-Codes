@@ -9,13 +9,6 @@ public:
         }
         vector<pair<vector<int>,char>> vp;
         for(auto &[ch,cnt]:m){ sort(begin(cnt),end(cnt)); vp.push_back({cnt,ch}); }
-        sort(begin(vp),end(vp),[&](pair<vector<int>,char> &a, pair<vector<int>,char> &b){
-            if(a.first==b.first){ return a.second<b.second; }
-            for(int i=0; i<a.first.size(); i++){
-                if(a.first[i]!=b.first[i]){ return a.first[i]<b.first[i]; }
-            }
-            return false;
-        });
         sort(begin(vp),end(vp));
         string ans="";
         for(auto &[cnt,ch]:vp){ 
