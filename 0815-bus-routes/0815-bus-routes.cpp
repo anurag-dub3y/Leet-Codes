@@ -3,28 +3,30 @@ class Solution {
 public:
     int numBusesToDestination(vector<vector<int>>& r, int src, int tar) {
         if(src==tar){ return 0; }
-        unordered_map<int,vector<int>> bus;   // Bueses that visit key station
+        map<int,vector<int>> conns;
+        unordered_map<int,int> haveDest;
         queue<pii> pq;
-        unordered_set<int> dist={src};
+        unordered_map<int,int> dist;
         for(int i=0; i<r.size(); i++){
             for(int j=0; j<r[i].size(); j++){
-                bus[r[i][j]].push_back(i);
+                conns[r[i][j]].push_back(i);
+                if(r[i][j]==src){ pq.push({1,i}); dist[i]=1; }
+                if(r[i][j]==tar){ haveDest[i]=1; }
             }            
         }
-        pq.push({0,src});
+        int ans=INT_MAX;
         while(!pq.empty()){
             int d=pq.front().first, i=pq.front().second; pq.pop();
-            if(i==tar){ return d; }
-            for(int &b:bus[i]){  // For all the buses that visit this station
-                for(int &j:r[b]){  // For all the stations this bus visits
-                    if(dist.find(j)==dist.end()){
+            if(haveDest[i]==1){ return ans=min(ans,d); }
+            for(int &b:r[i]){  // For all the buses that visit this station
+                for(int &j:conns[b]){  // For all the stations this bus visits
+                    if(dist.count(j)==0 or dist[j]>1+d){
                         pq.push({1+d,j});
-                        dist.insert(j);
+                        dist[j]=1+d;
                     }
                 }
-                r[b].clear();
             }
         }
-        return -1;
+        return ans==INT_MAX?-1:ans;
     }
 };
