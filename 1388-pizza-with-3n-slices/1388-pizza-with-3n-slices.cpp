@@ -1,20 +1,18 @@
 class Solution {
 public:
-    int maxSizeSlices(vector<int>& slices, int l, int r){
-        int N = slices.size();
-        int k = N/3; 
-        vector<vector<int>> dp(N, vector<int>(k, 0));
-        for(int i = l; i <= r; i++){
-            for(int j = 0; j < k; j++){
-                dp[i][j] = max((i-1 >= 0 ? dp[i-1][j] : 0), 
-                               (((i-2 >= 0) && (j-1 >= 0)) ? dp[i-2][j-1] : 0) + slices[i]);
-            }
-        }
-        return dp[r][k-1];
-    };
+    int dfs(vector<int> &slices, int i,int end, int remaining, vector<vector<int>> &dp)     {
+        if(i>end || remaining==0) return 0;
+        int &ans=dp[i][remaining];
+        if(ans!=-1) return ans;
+        ans=dfs(slices,i+1,end,remaining,dp);
+        return ans=max(slices[i]+dfs(slices, i+2, end, remaining-1, dp), ans);
+    }
     
     int maxSizeSlices(vector<int>& slices) {
-        int N = slices.size();
-        return max(maxSizeSlices(slices, 0, N-2), maxSizeSlices(slices, 1, N-1));
+        vector<vector<int>> dp(slices.size(), vector<int> (slices.size()/3+1, -1));    
+        int ans1=dfs(slices,0, slices.size()-2,slices.size()/3, dp);
+        dp=vector<vector<int>> (slices.size(), vector<int> (slices.size()/3+1, -1));
+        int ans2=dfs(slices,1, slices.size()-1,slices.size()/3, dp);
+        return max(ans1, ans2);
     }
 };
