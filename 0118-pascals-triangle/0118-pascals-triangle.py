@@ -1,8 +1,6 @@
 class Solution:
     def generate(self, numRows: int) -> List[List[int]]:
-        ans=[]
-        i0=[1] 
-        ans.append(i0)
+        ans=[[1]]
         if(numRows==1):
             return ans
         for i in range(1,numRows):
