@@ -1,30 +1,39 @@
-class Solution{
+class Solution {
 public:
     vector<vector<int>> rotateGrid(vector<vector<int>>& grid, int k) {
-        int m=grid.size();
-        int n=grid[0].size();
-        
-        for(int i=0; i<min(m,n)/2; i++){
-            int z=2*(m+n-2);
-            z-=8*i;
-            for(int t=0;t<k%z;t++){
-                int p=grid[i][i];
-                int q=grid[m-i-1][i];
-                int r=grid[i][n-i-1];
-                int s=grid[m-i-1][n-i-1];
-                for(int h=i;h<n-i-1;h++) grid[i][h]=grid[i][h+1];
-                for(int h=m-i-1;h>i;h--) grid[h][i]=grid[h-1][i];
-                
-                for(int h=n-i-1;h>i;h--) grid[m-i-1][h]=grid[m-i-1][h-1];
-                
-                for(int h=i;h<m-i-1;h++) grid[h][n-i-1]=grid[h+1][n-i-1];
-                
-                grid[i+1][i]=p;
-                grid[m-i-2][n-i-1]=s;
-                grid[m-i-1][i+1]=q;
-                grid[i][n-i-2]=r;
-                    
+        vector<vector<int>> tmp;
+        int m=grid.size(), n=grid[0].size();
+        auto rotate=[&](vector<int> &arr, int d){
+            vector<int> tmp=arr;
+            for(int i=0; i<arr.size(); i++){
+                tmp[i]=arr[(i+d+arr.size())%arr.size()];
             }
+            arr=tmp;
+        };
+        for(int i=0; i<min(m,n)/2; i++){
+            int x=i, y=i;
+            vector<int> tmp2;
+            while(y < n - i){ tmp2.push_back(grid[x][y++]); }
+            // cout<<"ok"<<endl;
+            y--; x++;
+            while(x < m - i){ tmp2.push_back(grid[x++][y]); }
+            // cout<<"ok"<<endl;
+            x--; y--;
+            while(y >= i){ tmp2.push_back(grid[x][y--]); }
+            // cout<<"ok"<<endl;
+            y++;  x--;
+            while(x > i){ tmp2.push_back(grid[x--][y]); }
+            // cout<<"ok"<<endl;
+            // for(auto &r:tmp2){ cout<<r<<' '; } cout<<endl;
+            rotate(tmp2,k);
+            x=i, y=i; int j=0;
+            while(y < n - i){ grid[x][y++]=tmp2[j++]; }
+            y--; x++;
+            while(x < m - i){ grid[x++][y]=tmp2[j++]; }
+            x--; y--;
+            while(y >= i){ grid[x][y--]=tmp2[j++]; }
+            y++; x--;
+            while(x > i){ grid[x--][y]=tmp2[j++]; }
         }
         return grid;
     }
